@@ -109,10 +109,35 @@ const AuditReport: React.FC = () => {
               <div className="flex-1">
                 <h5 className="font-medium text-white">{issue.title}</h5>
                 <p className="text-gray-400 text-sm mt-1">{issue.description}</p>
+                  {issue.priority && (
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      issue.priority === 'high' ? 'bg-red-900 text-red-200' :
+                      issue.priority === 'medium' ? 'bg-yellow-900 text-yellow-200' :
+                      'bg-blue-900 text-blue-200'
+                    }`}>
+                      {issue.priority.toUpperCase()} PRIORITY
+                    </span>
+                  )}
                 {issue.recommendation && (
                   <div className="mt-2 p-2 bg-gray-700 rounded text-sm">
                     <span className="text-blue-400 font-medium">Recommendation:</span>
                     <p className="text-gray-300 mt-1">{issue.recommendation}</p>
+                  </div>
+                )}
+                {issue.implementationSteps && (
+                  <div className="mt-3 p-3 bg-gray-800 rounded text-sm">
+                    <span className="text-green-400 font-medium">Implementation Steps:</span>
+                    <ul className="text-gray-300 mt-2 space-y-1">
+                      {issue.implementationSteps.map((step: string, stepIndex: number) => (
+                        <li key={stepIndex} className="text-xs">{step}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {issue.expectedImpact && (
+                  <div className="mt-2 p-2 bg-blue-900/20 border border-blue-800 rounded text-sm">
+                    <span className="text-blue-300 font-medium">Expected Impact:</span>
+                    <p className="text-blue-200 mt-1 text-xs">{issue.expectedImpact}</p>
                   </div>
                 )}
               </div>
@@ -209,6 +234,99 @@ const AuditReport: React.FC = () => {
           </div>
         </div>
 
+        {/* Enhanced Analysis Summary */}
+        {(report.contentAnalysis || report.technicalAnalysis || report.competitiveAnalysis) && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {report.contentAnalysis && (
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Content Analysis</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Topic Relevance</span>
+                    <span className="text-white font-medium">{report.contentAnalysis.topicRelevance}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Content Depth</span>
+                    <span className="text-white font-medium">{report.contentAnalysis.contentDepth}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Readability</span>
+                    <span className="text-white font-medium">{report.contentAnalysis.readabilityScore}%</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 text-sm">Key Entities:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {report.contentAnalysis.entityRecognition.map((entity, index) => (
+                        <span key={index} className="px-2 py-1 bg-blue-900 text-blue-200 text-xs rounded">
+                          {entity}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {report.technicalAnalysis && (
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Technical Performance</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Mobile Score</span>
+                    <span className="text-white font-medium">{report.technicalAnalysis.mobileScore}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">LCP</span>
+                    <span className={`font-medium ${report.technicalAnalysis.coreWebVitals.lcp > 2.5 ? 'text-red-400' : 'text-green-400'}`}>
+                      {report.technicalAnalysis.coreWebVitals.lcp.toFixed(1)}s
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Internal Links</span>
+                    <span className="text-white font-medium">{report.technicalAnalysis.internalLinks}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 text-sm">Schema Types:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {report.technicalAnalysis.schemaMarkup.map((schema, index) => (
+                        <span key={index} className="px-2 py-1 bg-green-900 text-green-200 text-xs rounded">
+                          {schema}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {report.competitiveAnalysis && (
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Competitive Insights</h3>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-gray-400 text-sm">Content Gaps:</span>
+                    <ul className="text-white text-xs mt-1 space-y-1">
+                      {report.competitiveAnalysis.contentGaps.slice(0, 2).map((gap, index) => (
+                        <li key={index}>• {gap}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 text-sm">Keyword Opportunities:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {report.competitiveAnalysis.keywordOpportunities.slice(0, 2).map((keyword, index) => (
+                        <span key={index} className="px-2 py-1 bg-purple-900 text-purple-200 text-xs rounded">
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Tabs */}
         <div className="bg-gray-800 rounded-lg overflow-hidden">
           <div className="border-b border-gray-700">
@@ -229,7 +347,7 @@ const AuditReport: React.FC = () => {
                 >
                   {tab.label}
                   {tab.count > 0 && (
-                    <span className="ml-2 px-2 py-1 bg-red-600 text-white text-xs rounded-full">
+                    <span className="ml-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
                       {tab.count}
                     </span>
                   )}
