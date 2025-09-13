@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import LandingPage from './pages/LandingPage';
@@ -21,7 +21,7 @@ function App() {
           <div className="min-h-screen bg-gray-900 text-white">
             <Header />
             <NotificationToast />
-            <PageViewTracker page={window.location.pathname} />
+            <PageViewTracker page={window.location.hash || '/'} />
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />

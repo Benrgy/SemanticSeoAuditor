@@ -5,6 +5,7 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: './', // Use relative paths for GitHub Pages
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -20,7 +21,9 @@ export default defineConfig({
   build: {
     target: 'esnext',
     minify: 'esbuild',
-    sourcemap: true,
+    sourcemap: false, // Disable sourcemaps for GitHub Pages
+    outDir: 'dist',
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
