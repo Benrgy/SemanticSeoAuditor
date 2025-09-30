@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { SEOWrapper } from './components/SEOWrapper';
+import { CrawlerDetector } from './components/CrawlerDetector';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -23,6 +24,7 @@ function App() {
           <Router>
             <SEOWrapper>
               <div className="min-h-screen bg-gray-900 text-white">
+                <CrawlerDetector />
                 <Header />
                 <NotificationToast />
                 <PageViewTracker page={window.location.hash || '/'} />

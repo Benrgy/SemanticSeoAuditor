@@ -137,8 +137,11 @@ The application tracks key user events:
 ### Netlify
 
 1. **Connect repository to Netlify**
-2. **Configure build settings**: `npm run build`, `dist/`
-3. **Set environment variables**
+2. **Configure build settings**: 
+   - Build command: `npm run build:netlify`
+   - Publish directory: `dist/`
+3. **Set environment variables in Netlify dashboard**
+4. **Edge Functions will automatically optimize SEO for crawlers**
 
 ## 📈 Performance Targets
 
