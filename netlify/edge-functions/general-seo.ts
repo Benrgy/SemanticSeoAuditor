@@ -13,12 +13,12 @@ interface SEOData {
   structuredData?: any;
 }
 
-// Route-specific SEO configurations
+// Enhanced route-specific SEO configurations
 const routeConfigs: Record<string, SEOData> = {
   '/': {
     title: 'Semantic SEO Auditor - Free Website SEO Analysis Tool',
     description: 'Get instant, comprehensive SEO audits for your website. Analyze technical, on-page, and semantic SEO with AI-powered insights. No signup required - results in under 3 seconds.',
-    keywords: 'SEO audit, website analysis, technical SEO, on-page SEO, semantic SEO, free SEO tool, website optimization',
+    keywords: 'SEO audit, website analysis, technical SEO, on-page SEO, semantic SEO, free SEO tool, website optimization, search engine optimization',
     ogTitle: 'Semantic SEO Auditor - Free Instant Website Analysis',
     ogDescription: 'Professional SEO audits in 3 seconds. Technical, on-page & semantic analysis with actionable recommendations. Try it free!',
     ogImage: 'https://benrgy.github.io/SemanticSeoAuditor/og-image.png',
@@ -33,21 +33,32 @@ const routeConfigs: Record<string, SEOData> = {
       "url": "https://benrgy.github.io/SemanticSeoAuditor",
       "applicationCategory": "SEO Tool",
       "operatingSystem": "Web Browser",
+      "browserRequirements": "Requires JavaScript",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
       "creator": {
         "@type": "Organization",
-        "name": "Semantic SEO Auditor"
-      }
+        "name": "Semantic SEO Auditor",
+        "url": "https://benrgy.github.io/SemanticSeoAuditor"
+      },
+      "featureList": [
+        "Technical SEO Analysis",
+        "On-Page SEO Optimization",
+        "Semantic SEO Insights",
+        "AI-Powered Recommendations",
+        "Instant Results",
+        "No Signup Required"
+      ]
     }
   },
   '/login': {
     title: 'Login - Semantic SEO Auditor',
     description: 'Sign in to your Semantic SEO Auditor account to access your audit history, saved reports, and advanced SEO analysis features.',
-    keywords: 'SEO login, account access, SEO dashboard, audit history',
+    keywords: 'SEO login, account access, SEO dashboard, audit history, user login',
     ogTitle: 'Login to Semantic SEO Auditor',
     ogDescription: 'Access your SEO audit dashboard and saved reports',
     ogImage: 'https://benrgy.github.io/SemanticSeoAuditor/og-image.png',
@@ -58,7 +69,7 @@ const routeConfigs: Record<string, SEOData> = {
   '/signup': {
     title: 'Sign Up - Semantic SEO Auditor',
     description: 'Create your free Semantic SEO Auditor account to save audit history, track improvements, and access advanced SEO analysis features.',
-    keywords: 'SEO signup, create account, free SEO tool, SEO dashboard',
+    keywords: 'SEO signup, create account, free SEO tool, SEO dashboard, register',
     ogTitle: 'Create Free Account - Semantic SEO Auditor',
     ogDescription: 'Sign up for free to save your SEO audits and track website improvements over time',
     ogImage: 'https://benrgy.github.io/SemanticSeoAuditor/og-image.png',
@@ -69,7 +80,7 @@ const routeConfigs: Record<string, SEOData> = {
   '/dashboard': {
     title: 'SEO Dashboard - Semantic SEO Auditor',
     description: 'View your SEO audit history, track website improvements, and manage your SEO analysis reports in your personal dashboard.',
-    keywords: 'SEO dashboard, audit history, website tracking, SEO reports, SEO management',
+    keywords: 'SEO dashboard, audit history, website tracking, SEO reports, SEO management, performance tracking',
     ogTitle: 'SEO Audit Dashboard - Track Your Website Performance',
     ogDescription: 'Manage your SEO audits, track improvements, and view detailed analysis reports',
     ogImage: 'https://benrgy.github.io/SemanticSeoAuditor/og-image.png',
@@ -80,7 +91,7 @@ const routeConfigs: Record<string, SEOData> = {
   '/files': {
     title: 'File Management - Semantic SEO Auditor',
     description: 'Upload and manage SEO-related files like sitemaps, robots.txt, and configuration files for enhanced website analysis.',
-    keywords: 'SEO files, sitemap upload, robots.txt, file management, SEO configuration',
+    keywords: 'SEO files, sitemap upload, robots.txt, file management, SEO configuration, XML sitemap',
     ogTitle: 'SEO File Management - Upload Sitemaps & Configuration Files',
     ogDescription: 'Manage your SEO files including sitemaps, robots.txt, and configuration files',
     ogImage: 'https://benrgy.github.io/SemanticSeoAuditor/og-image.png',
@@ -92,7 +103,7 @@ const routeConfigs: Record<string, SEOData> = {
 
 function generateEnhancedHead(seoData: SEOData): string {
   const structuredDataScript = seoData.structuredData 
-    ? `<script type="application/ld+json">${JSON.stringify(seoData.structuredData)}</script>`
+    ? `<script type="application/ld+json">${JSON.stringify(seoData.structuredData, null, 2)}</script>`
     : '';
 
   return `
@@ -100,6 +111,10 @@ function generateEnhancedHead(seoData: SEOData): string {
     <meta name="description" content="${seoData.description}" />
     <meta name="keywords" content="${seoData.keywords}" />
     <meta name="robots" content="index, follow" />
+    <meta name="author" content="Semantic SEO Auditor" />
+    <meta name="generator" content="Semantic SEO Auditor" />
+    <meta name="rating" content="general" />
+    <meta name="revisit-after" content="7 days" />
     <link rel="canonical" href="${seoData.canonicalUrl}" />
     
     <!-- Open Graph / Facebook -->
@@ -111,17 +126,28 @@ function generateEnhancedHead(seoData: SEOData): string {
     <meta property="og:image" content="${seoData.ogImage}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Semantic SEO Auditor - Free Website Analysis Tool" />
+    <meta property="og:locale" content="en_US" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${seoData.twitterTitle}" />
     <meta name="twitter:description" content="${seoData.twitterDescription}" />
     <meta name="twitter:image" content="${seoData.ogImage}" />
+    <meta name="twitter:image:alt" content="Semantic SEO Auditor - Free Website Analysis Tool" />
     <meta name="twitter:site" content="@SemanticSEO" />
+    <meta name="twitter:creator" content="@SemanticSEO" />
     
-    <!-- Additional SEO -->
-    <meta name="author" content="Semantic SEO Auditor" />
+    <!-- Additional SEO Meta Tags -->
     <meta name="theme-color" content="#1f2937" />
+    <meta name="msapplication-TileColor" content="#1f2937" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
     ${structuredDataScript}
   `;
@@ -129,36 +155,13 @@ function generateEnhancedHead(seoData: SEOData): string {
 
 function isCrawler(userAgent: string): boolean {
   const crawlerPatterns = [
-    'googlebot',
-    'bingbot',
-    'slurp',
-    'duckduckbot',
-    'baiduspider',
-    'yandexbot',
-    'facebookexternalhit',
-    'twitterbot',
-    'rogerbot',
-    'linkedinbot',
-    'embedly',
-    'quora link preview',
-    'showyoubot',
-    'outbrain',
-    'pinterest/0.',
-    'developers.google.com/+/web/snippet',
-    'slackbot',
-    'vkshare',
-    'w3c_validator',
-    'redditbot',
-    'applebot',
-    'whatsapp',
-    'flipboard',
-    'tumblr',
-    'bitlybot',
-    'skypeuripreview',
-    'nuzzel',
-    'discordbot',
-    'google page speed',
-    'qwantify'
+    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
+    'facebookexternalhit', 'twitterbot', 'rogerbot', 'linkedinbot', 'embedly',
+    'quora link preview', 'showyoubot', 'outbrain', 'pinterest/0.',
+    'developers.google.com/+/web/snippet', 'slackbot', 'vkshare', 'w3c_validator',
+    'redditbot', 'applebot', 'whatsapp', 'flipboard', 'tumblr', 'bitlybot',
+    'skypeuripreview', 'nuzzel', 'discordbot', 'google page speed', 'qwantify',
+    'semrushbot', 'ahrefsbot', 'mj12bot', 'dotbot'
   ];
   
   const ua = userAgent.toLowerCase();
@@ -180,34 +183,42 @@ export default async function handler(request: Request, context: Context) {
     return context.next();
   }
   
-  // Get SEO data for the route
-  const seoData = routeConfigs[pathname] || routeConfigs['/'];
-  
-  // Fetch the original HTML
-  const response = await context.next();
-  const html = await response.text();
-  
-  // Generate enhanced head content
-  const enhancedHead = generateEnhancedHead(seoData);
-  
-  // Replace the head content
-  const enhancedHtml = html.replace(
-    /<head[^>]*>[\s\S]*?<\/head>/i,
-    `<head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="icon" type="image/svg+xml" href="./vite.svg" />
-      ${enhancedHead}
-    </head>`
-  );
-  
-  return new Response(enhancedHtml, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: {
-      ...Object.fromEntries(response.headers),
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'public, max-age=300, s-maxage=3600'
-    }
-  });
+  try {
+    // Get SEO data for the route
+    const seoData = routeConfigs[pathname] || routeConfigs['/'];
+    
+    // Fetch the original HTML
+    const response = await context.next();
+    const html = await response.text();
+    
+    // Generate enhanced head content
+    const enhancedHead = generateEnhancedHead(seoData);
+    
+    // Replace the head content
+    const enhancedHtml = html.replace(
+      /<head[^>]*>[\s\S]*?<\/head>/i,
+      `<head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+        ${enhancedHead}
+      </head>`
+    );
+    
+    return new Response(enhancedHtml, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: {
+        ...Object.fromEntries(response.headers),
+        'content-type': 'text/html; charset=utf-8',
+        'cache-control': 'public, max-age=300, s-maxage=3600', // 5 min browser, 1 hour CDN
+        'x-seo-enhanced': 'true'
+      }
+    });
+
+  } catch (error) {
+    console.error('General SEO edge function error:', error);
+    // Fallback to normal response on error
+    return context.next();
+  }
 }

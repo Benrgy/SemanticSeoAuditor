@@ -12,7 +12,7 @@ export const seoConfigs: Record<string, SEOConfig> = {
   '/': {
     title: 'Semantic SEO Auditor - Free Website SEO Analysis Tool',
     description: 'Get instant, comprehensive SEO audits for your website. Analyze technical, on-page, and semantic SEO with AI-powered insights. No signup required - results in under 3 seconds.',
-    keywords: 'SEO audit, website analysis, technical SEO, on-page SEO, semantic SEO, free SEO tool, website optimization',
+    keywords: 'SEO audit, website analysis, technical SEO, on-page SEO, semantic SEO, free SEO tool, website optimization, search engine optimization',
     ogTitle: 'Semantic SEO Auditor - Free Instant Website Analysis',
     ogDescription: 'Professional SEO audits in 3 seconds. Technical, on-page & semantic analysis with actionable recommendations. Try it free!',
     twitterTitle: 'Semantic SEO Auditor - Free SEO Analysis',
@@ -21,7 +21,7 @@ export const seoConfigs: Record<string, SEOConfig> = {
   '/login': {
     title: 'Login - Semantic SEO Auditor',
     description: 'Sign in to your Semantic SEO Auditor account to access your audit history, saved reports, and advanced SEO analysis features.',
-    keywords: 'SEO login, account access, SEO dashboard, audit history',
+    keywords: 'SEO login, account access, SEO dashboard, audit history, user login',
     ogTitle: 'Login to Semantic SEO Auditor',
     ogDescription: 'Access your SEO audit dashboard and saved reports',
     twitterTitle: 'Login - Semantic SEO Auditor',
@@ -30,7 +30,7 @@ export const seoConfigs: Record<string, SEOConfig> = {
   '/signup': {
     title: 'Sign Up - Semantic SEO Auditor',
     description: 'Create your free Semantic SEO Auditor account to save audit history, track improvements, and access advanced SEO analysis features.',
-    keywords: 'SEO signup, create account, free SEO tool, SEO dashboard',
+    keywords: 'SEO signup, create account, free SEO tool, SEO dashboard, register',
     ogTitle: 'Create Free Account - Semantic SEO Auditor',
     ogDescription: 'Sign up for free to save your SEO audits and track website improvements over time',
     twitterTitle: 'Sign Up Free - Semantic SEO Auditor',
@@ -39,7 +39,7 @@ export const seoConfigs: Record<string, SEOConfig> = {
   '/dashboard': {
     title: 'SEO Dashboard - Semantic SEO Auditor',
     description: 'View your SEO audit history, track website improvements, and manage your SEO analysis reports in your personal dashboard.',
-    keywords: 'SEO dashboard, audit history, website tracking, SEO reports, SEO management',
+    keywords: 'SEO dashboard, audit history, website tracking, SEO reports, SEO management, performance tracking',
     ogTitle: 'SEO Audit Dashboard - Track Your Website Performance',
     ogDescription: 'Manage your SEO audits, track improvements, and view detailed analysis reports',
     twitterTitle: 'SEO Dashboard - Semantic SEO Auditor',
@@ -48,7 +48,7 @@ export const seoConfigs: Record<string, SEOConfig> = {
   '/files': {
     title: 'File Management - Semantic SEO Auditor',
     description: 'Upload and manage SEO-related files like sitemaps, robots.txt, and configuration files for enhanced website analysis.',
-    keywords: 'SEO files, sitemap upload, robots.txt, file management, SEO configuration',
+    keywords: 'SEO files, sitemap upload, robots.txt, file management, SEO configuration, XML sitemap',
     ogTitle: 'SEO File Management - Upload Sitemaps & Configuration Files',
     ogDescription: 'Manage your SEO files including sitemaps, robots.txt, and configuration files',
     twitterTitle: 'SEO File Management - Semantic SEO Auditor',
@@ -64,7 +64,7 @@ export const getSEOForPath = (pathname: string): SEOConfig => {
     return {
       title: 'SEO Audit Report - Semantic SEO Auditor',
       description: 'View your comprehensive SEO audit report with technical, on-page, and semantic analysis. Get actionable recommendations to improve your website rankings.',
-      keywords: 'SEO report, audit results, website analysis, SEO recommendations, technical SEO',
+      keywords: 'SEO report, audit results, website analysis, SEO recommendations, technical SEO, on-page SEO, semantic SEO',
       ogTitle: 'SEO Audit Report - Detailed Website Analysis',
       ogDescription: 'Comprehensive SEO audit report with actionable recommendations for website improvement',
       twitterTitle: 'SEO Audit Report - Semantic SEO Auditor',
@@ -73,4 +73,24 @@ export const getSEOForPath = (pathname: string): SEOConfig => {
   }
   
   return seoConfigs[pathname] || getDefaultSEO();
+};
+
+// Utility function to generate dynamic SEO for audit reports
+export const generateAuditSEO = (auditData: {
+  url: string;
+  score: number;
+  domain: string;
+}): SEOConfig => {
+  const { url, score, domain } = auditData;
+  const scoreCategory = score >= 90 ? 'Excellent' : score >= 80 ? 'Good' : score >= 70 ? 'Fair' : score >= 60 ? 'Poor' : 'Needs Improvement';
+  
+  return {
+    title: `SEO Audit Report for ${domain} - Score: ${score}/100 | Semantic SEO Auditor`,
+    description: `Comprehensive SEO analysis for ${url}. Overall score: ${score}/100 (${scoreCategory}). Get actionable recommendations to improve your website's search rankings.`,
+    keywords: `SEO audit, ${domain}, website analysis, technical SEO, on-page SEO, semantic SEO, ${scoreCategory.toLowerCase()}`,
+    ogTitle: `SEO Audit Report for ${domain} - Score: ${score}/100`,
+    ogDescription: `${domain} scored ${score}/100 in our comprehensive SEO analysis. View detailed recommendations to improve your search rankings.`,
+    twitterTitle: `SEO Audit: ${domain} - ${score}/100`,
+    twitterDescription: `Comprehensive SEO analysis for ${domain}. Score: ${score}/100. Get actionable insights to boost your rankings.`
+  };
 };

@@ -1,4 +1,4 @@
-# Netlify configuration for SEO optimization
+# Netlify configuration for comprehensive SEO optimization
 
 [build]
   publish = "dist"
@@ -6,12 +6,12 @@
 
 # Edge functions for comprehensive SEO optimization
 [[edge_functions]]
-  function = "general-seo"
-  path = "/*"
-
-[[edge_functions]]
   function = "audit-seo"
   path = "/audit/*"
+
+[[edge_functions]]
+  function = "general-seo"
+  path = "/*"
 
 # Redirect rules for SPA
 [[redirects]]
@@ -27,6 +27,8 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
 [[headers]]
   for = "/static/*"
@@ -42,3 +44,31 @@
   for = "/*.css"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Environment variables (set in Netlify dashboard)
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
+
+# Function settings
+[functions]
+  node_bundler = "esbuild"
+
+# Edge function settings
+[edge_functions]
+  external_node_modules = []
