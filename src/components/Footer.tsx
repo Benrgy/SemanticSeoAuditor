@@ -36,10 +36,50 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#features" className="text-gray-400 hover:text-white transition-colors">Features</a></li>
-              <li><a href="#benefits" className="text-gray-400 hover:text-white transition-colors">Benefits</a></li>
-              <li><a href="#how-it-works" className="text-gray-400 hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="#faq" className="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+              <li>
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('features');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  Features
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('benefits');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  Benefits
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('how-it-works');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  How It Works
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('faq');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  FAQ
+                </button>
+              </li>
               <li><a href="/signup" className="text-gray-400 hover:text-white transition-colors">Sign Up</a></li>
             </ul>
           </div>

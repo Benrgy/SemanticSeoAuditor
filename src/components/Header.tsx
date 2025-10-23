@@ -4,6 +4,20 @@ import { useAuth } from '../hooks/useAuth';
 import { Search, User, LogOut, BarChart3 } from 'lucide-react';
 import { Button } from './ui/Button';
 
+const smoothScrollTo = (elementId: string) => {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const headerOffset = 80;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+};
+
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -24,18 +38,30 @@ const Header: React.FC = () => {
           <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
             {isLandingPage && (
               <>
-                <a href="#features" className="text-gray-300 hover:text-white transition-colors">
+                <button 
+                  onClick={() => smoothScrollTo('features')}
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                >
                   Features
-                </a>
-                <a href="#benefits" className="text-gray-300 hover:text-white transition-colors">
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('benefits')}
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                >
                   Benefits
-                </a>
-                <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('how-it-works')}
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                >
                   How It Works
-                </a>
-                <a href="#faq" className="text-gray-300 hover:text-white transition-colors">
+                </button>
+                <button 
+                  onClick={() => smoothScrollTo('faq')}
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                >
                   FAQ
-                </a>
+                </button>
               </>
             )}
           </nav>

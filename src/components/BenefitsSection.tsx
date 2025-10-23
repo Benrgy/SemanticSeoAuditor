@@ -30,7 +30,7 @@ const BenefitsSection: React.FC = () => {
   ];
 
   return (
-    <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
+    <section id="benefits" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 anchor-target">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -72,12 +72,17 @@ const BenefitsSection: React.FC = () => {
             <p className="text-blue-100 mb-6 text-lg">
               Get your free SEO audit now and start improving your search rankings today
             </p>
-            <a
-              href="#"
+            <button
+              onClick={() => {
+                const heroSection = document.getElementById('hero');
+                if (heroSection) {
+                  heroSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
               className="inline-block bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors transform hover:scale-105"
             >
               Start Free Audit Now
-            </a>
+            </button>
           </div>
         </div>
       </div>
