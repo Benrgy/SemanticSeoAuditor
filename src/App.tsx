@@ -8,6 +8,9 @@ import { CrawlerDetector } from './components/CrawlerDetector';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import CookiePage from './pages/CookiePage';
 import Dashboard from './pages/Dashboard';
 import AuditReport from './pages/AuditReport';
 import FileManagement from './pages/FileManagement';
@@ -32,6 +35,9 @@ function App() {
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/signup" element={<SignupPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/cookies" element={<CookiePage />} />
                   <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <Dashboard />

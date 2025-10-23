@@ -94,27 +94,7 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  asChild
-                >
-                  <Link 
-                    to="/login"
-                  >
-                    Login
-                  </Link>
-                </Button>
-                <Button
-                  size="sm"
-                  asChild
-                >
-                  <Link 
-                    to="/signup"
-                  >
-                    Sign Up
-                  </Link>
-                </Button>
+                <span className="text-sm text-gray-400">Free SEO Analysis Tool</span>
               </div>
             )}
           </div>

@@ -59,7 +59,6 @@ const LandingPage: React.FC = () => {
 
       <FeatureSection />
       <BenefitsSection />
-      <UserPersonas />
       <HowItWorksSection />
       <FAQSection />
       <Footer />

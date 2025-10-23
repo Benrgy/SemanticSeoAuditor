@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 md:col-span-3">
             <div className="flex items-center space-x-2 mb-4">
               <BarChart3 className="h-8 w-8 text-blue-500" />
               <span className="text-xl font-bold text-white">SEO Auditor</span>
@@ -80,26 +80,6 @@ const Footer: React.FC = () => {
                   FAQ
                 </button>
               </li>
-              <li><a href="/signup" className="text-gray-400 hover:text-white transition-colors">Sign Up</a></li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center space-x-2 text-gray-400">
-                <Mail className="h-4 w-4" />
-                <span>support@seoauditor.com</span>
-              </li>
-              <li className="flex items-center space-x-2 text-gray-400">
-                <Phone className="h-4 w-4" />
-                <span>+1-555-SEO-HELP</span>
-              </li>
-              <li className="flex items-center space-x-2 text-gray-400">
-                <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
-              </li>
             </ul>
           </div>
         </div>
@@ -110,13 +90,13 @@ const Footer: React.FC = () => {
             © 2024 SEO Auditor. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 sm:mt-0">
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <a href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <a href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
               Terms of Service
             </a>
-            <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <a href="/cookies" className="text-gray-400 hover:text-white text-sm transition-colors">
               Cookie Policy
             </a>
           </div>
