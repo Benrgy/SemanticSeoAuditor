@@ -21,7 +21,7 @@ const AuditReport: React.FC = () => {
   const { auditId } = useParams<{ auditId: string }>();
   const [report, setReport] = useState<AuditReport | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'technical' | 'onpage' | 'semantic'>('technical');
+  const [activeTab, setActiveTab] = useState<'technical' | 'onpage' | 'semantic' | 'advanced'>('technical');
   const { addNotification } = useNotification();
   const { user } = useAuth();
 
@@ -235,8 +235,8 @@ const AuditReport: React.FC = () => {
         </div>
 
         {/* Enhanced Analysis Summary */}
-        {(report.contentAnalysis || report.technicalAnalysis || report.competitiveAnalysis) && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {(report.contentAnalysis || report.technicalAnalysis || report.competitiveAnalysis || report.geoAnalysis || report.aiOverviewOptimization) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {report.contentAnalysis && (
               <div className="bg-gray-800 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Content Analysis</h3>
@@ -252,6 +252,10 @@ const AuditReport: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-400">Readability</span>
                     <span className="text-white font-medium">{report.contentAnalysis.readabilityScore}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Uniqueness</span>
+                    <span className="text-white font-medium">{report.contentAnalysis.contentQuality?.uniqueness}%</span>
                   </div>
                   <div>
                     <span className="text-gray-400 text-sm">Key Entities:</span>
@@ -282,6 +286,12 @@ const AuditReport: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-gray-400">FCP</span>
+                    <span className={`font-medium ${report.technicalAnalysis.coreWebVitals.fcp > 1.8 ? 'text-red-400' : 'text-green-400'}`}>
+                      {report.technicalAnalysis.coreWebVitals.fcp?.toFixed(1)}s
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-gray-400">Internal Links</span>
                     <span className="text-white font-medium">{report.technicalAnalysis.internalLinks}</span>
                   </div>
@@ -303,6 +313,14 @@ const AuditReport: React.FC = () => {
               <div className="bg-gray-800 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Competitive Insights</h3>
                 <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Est. Traffic</span>
+                    <span className="text-white font-medium">{report.competitiveAnalysis.marketPosition?.estimatedTraffic.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Domain Authority</span>
+                    <span className="text-white font-medium">{report.competitiveAnalysis.marketPosition?.domainAuthority}</span>
+                  </div>
                   <div>
                     <span className="text-gray-400 text-sm">Content Gaps:</span>
                     <ul className="text-white text-xs mt-1 space-y-1">
@@ -324,6 +342,69 @@ const AuditReport: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {report.aiOverviewOptimization && (
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">AI & Voice Search</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">AI Readiness</span>
+                    <span className="text-white font-medium">{report.aiOverviewOptimization.aiReadinessScore}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Featured Snippet</span>
+                    <span className="text-white font-medium">{report.aiOverviewOptimization.featuredSnippetPotential}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Voice Search</span>
+                    <span className="text-white font-medium">{report.aiOverviewOptimization.voiceSearchOptimization}%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Knowledge Graph</span>
+                    <span className={`font-medium ${report.aiOverviewOptimization.knowledgeGraphPresence ? 'text-green-400' : 'text-red-400'}`}>
+                      {report.aiOverviewOptimization.knowledgeGraphPresence ? 'Present' : 'Missing'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Overall Recommendations */}
+        {report.overallRecommendations && report.overallRecommendations.length > 0 && (
+          <div className="bg-gray-800 rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-semibold text-white mb-4">Priority Recommendations</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {report.overallRecommendations.map((rec, index) => (
+                <div key={index} className="border border-gray-600 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium text-white">{rec.category}</h3>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      rec.priority === 'critical' ? 'bg-red-900 text-red-200' :
+                      rec.priority === 'high' ? 'bg-orange-900 text-orange-200' :
+                      rec.priority === 'medium' ? 'bg-yellow-900 text-yellow-200' :
+                      'bg-blue-900 text-blue-200'
+                    }`}>
+                      {rec.priority.toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="text-gray-400 text-sm mb-3">{rec.recommendation}</p>
+                  <div className="flex justify-between text-xs text-gray-500 mb-2">
+                    <span>Impact: {rec.impact}</span>
+                    <span>Effort: {rec.effort}</span>
+                  </div>
+                  <details className="text-xs">
+                    <summary className="text-blue-400 cursor-pointer">Implementation Steps</summary>
+                    <ul className="mt-2 space-y-1 text-gray-400">
+                      {rec.implementationSteps.map((step, stepIndex) => (
+                        <li key={stepIndex}>• {step}</li>
+                      ))}
+                    </ul>
+                  </details>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -334,7 +415,8 @@ const AuditReport: React.FC = () => {
               {[
                 { id: 'technical', label: 'Technical SEO', count: report.technicalSEO?.issues?.length || 0 },
                 { id: 'onpage', label: 'On-Page SEO', count: report.onPageSEO?.issues?.length || 0 },
-                { id: 'semantic', label: 'Semantic SEO', count: report.semanticSEO?.issues?.length || 0 }
+                { id: 'semantic', label: 'Semantic SEO', count: report.semanticSEO?.issues?.length || 0 },
+                { id: 'advanced', label: 'Advanced Metrics', count: 0 }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -375,6 +457,132 @@ const AuditReport: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4">Semantic SEO Analysis</h3>
                 {renderIssueList(report.semanticSEO?.issues, 'Content & Semantic Issues')}
+              </div>
+            )}
+
+            {activeTab === 'advanced' && (
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-6">Advanced SEO Metrics</h3>
+                
+                {/* Geo Analysis */}
+                {report.geoAnalysis && (
+                  <div className="mb-8">
+                    <h4 className="text-md font-semibold text-white mb-4">Geographic & International SEO</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-2">Target Countries</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {report.geoAnalysis.targetCountries.map((country, index) => (
+                            <span key={index} className="px-2 py-1 bg-blue-900 text-blue-200 text-sm rounded">
+                              {country}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-2">Local SEO Score</h5>
+                        <div className="text-2xl font-bold text-blue-400 mb-2">
+                          {report.geoAnalysis.localSEO.score}/100
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          Business Listings: {report.geoAnalysis.localSEO.businessListings ? 'Present' : 'Missing'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Advanced Technical Metrics */}
+                {report.advancedTechnicalMetrics && (
+                  <div className="mb-8">
+                    <h4 className="text-md font-semibold text-white mb-4">Advanced Technical Analysis</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-2">PageSpeed Insights</h5>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Desktop</span>
+                            <span className="text-white font-medium">{report.advancedTechnicalMetrics.pagespeedInsights.desktop.score}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Mobile</span>
+                            <span className="text-white font-medium">{report.advancedTechnicalMetrics.pagespeedInsights.mobile.score}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-2">Image Optimization</h5>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Total Images</span>
+                            <span className="text-white">{report.technicalAnalysis?.imageOptimization?.totalImages}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Optimized</span>
+                            <span className="text-green-400">{report.technicalAnalysis?.imageOptimization?.optimizedImages}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Missing Alt Text</span>
+                            <span className="text-red-400">{report.technicalAnalysis?.imageOptimization?.missingAltText}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-2">Crawlability</h5>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Robots.txt</span>
+                            <span className={report.advancedTechnicalMetrics.crawlabilityAnalysis.robotsTxt.present ? 'text-green-400' : 'text-red-400'}>
+                              {report.advancedTechnicalMetrics.crawlabilityAnalysis.robotsTxt.present ? 'Present' : 'Missing'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">XML Sitemap</span>
+                            <span className={report.advancedTechnicalMetrics.crawlabilityAnalysis.xmlSitemap.present ? 'text-green-400' : 'text-red-400'}>
+                              {report.advancedTechnicalMetrics.crawlabilityAnalysis.xmlSitemap.present ? 'Present' : 'Missing'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Sitemap URLs</span>
+                            <span className="text-white">{report.advancedTechnicalMetrics.crawlabilityAnalysis.xmlSitemap.urls}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Keyword Analysis */}
+                {report.contentAnalysis?.keywordAnalysis && (
+                  <div className="mb-8">
+                    <h4 className="text-md font-semibold text-white mb-4">Keyword Analysis</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-3">Primary Keywords</h5>
+                        <div className="space-y-2">
+                          {report.contentAnalysis.keywordAnalysis.primaryKeywords.map((keyword, index) => (
+                            <div key={index} className="flex justify-between items-center">
+                              <span className="text-gray-300 text-sm">{keyword.keyword}</span>
+                              <div className="text-xs text-gray-400">
+                                {keyword.density.toFixed(1)}% density
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h5 className="font-medium text-white mb-3">Missing Keywords</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {report.contentAnalysis.keywordAnalysis.missingKeywords.map((keyword, index) => (
+                            <span key={index} className="px-2 py-1 bg-red-900 text-red-200 text-xs rounded">
+                              {keyword}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

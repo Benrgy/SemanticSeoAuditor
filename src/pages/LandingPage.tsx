@@ -38,13 +38,13 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section id="hero" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 anchor-target">
+      <section id="hero" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Semantic SEO Auditor
+            Advanced SEO Intelligence Tool
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Fast, Free, No Signup Needed - Get instant SEO insights and actionable recommendations
+            AI-Powered SEO Analysis • Geographic Targeting • Competitive Intelligence • Voice Search Optimization
           </p>
           
           <div className="max-w-2xl mx-auto">
@@ -52,7 +52,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           <p className="text-sm text-gray-400 mt-4">
-            ⚡ Results in under 3 seconds • 🎯 Technical, On-Page & Semantic Analysis • 📞 Click-to-call expert support
+            ⚡ 200+ SEO Checkpoints • 🤖 AI Overview Optimization • 🌍 Geo-Targeting Analysis • 📊 Competitive Intelligence
           </p>
         </div>
       </section>

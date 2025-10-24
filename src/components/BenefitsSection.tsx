@@ -5,27 +5,27 @@ const BenefitsSection: React.FC = () => {
   const benefits = [
     {
       icon: <DollarSign className="h-12 w-12" />,
-      title: 'Save Money',
-      description: 'Free SEO audits save you hundreds compared to hiring agencies or expensive tools.',
-      stat: '90% Cost Savings'
+      title: 'Professional-Grade Analysis',
+      description: 'Enterprise-level SEO insights typically costing $500+ per audit, completely free.',
+      stat: 'Free Forever'
     },
     {
       icon: <TrendingUp className="h-12 w-12" />,
-      title: 'Boost Rankings',
-      description: 'Actionable insights help improve your search rankings and organic traffic.',
-      stat: '150% Traffic Increase'
+      title: 'AI-Powered Insights',
+      description: 'Advanced AI analysis for semantic SEO, content optimization, and voice search readiness.',
+      stat: '50+ AI Metrics'
     },
     {
       icon: <Users className="h-12 w-12" />,
-      title: 'Expert Support',
-      description: 'Access to real SEO experts whenever you need guidance or consultation.',
-      stat: '24/7 Support'
+      title: 'Comprehensive Coverage',
+      description: 'Technical, on-page, semantic, geo-targeting, and competitive analysis in one tool.',
+      stat: '200+ Checkpoints'
     },
     {
       icon: <Award className="h-12 w-12" />,
-      title: 'Proven Results',
-      description: 'Trusted by thousands of businesses to improve their online presence.',
-      stat: '10,000+ Audits'
+      title: 'Instant Results',
+      description: 'Get detailed SEO analysis in under 3 seconds with actionable implementation steps.',
+      stat: '3 Second Analysis'
     }
   ];
 

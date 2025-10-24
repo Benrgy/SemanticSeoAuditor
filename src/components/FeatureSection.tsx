@@ -5,33 +5,33 @@ const FeatureSection: React.FC = () => {
   const features = [
     {
       icon: <Zap className="h-8 w-8" />,
-      title: 'Lightning Fast Analysis',
-      description: 'Get comprehensive SEO reports in under 3 seconds with our optimized analysis engine.'
+      title: 'Advanced SEO Intelligence',
+      description: 'AI-powered analysis covering 50+ SEO factors including Core Web Vitals, semantic optimization, and competitive insights.'
     },
     {
       icon: <Brain className="h-8 w-8" />,
-      title: 'AI-Powered Semantic Analysis',
-      description: 'Advanced semantic SEO analysis using cutting-edge AI to understand content context and relevance.'
-    },
-    {
-      icon: <Phone className="h-8 w-8" />,
-      title: 'Instant Expert Support',
-      description: 'Click-to-call feature connects you instantly with SEO experts for personalized guidance.'
-    },
-    {
-      icon: <Shield className="h-8 w-8" />,
-      title: 'No Signup Required',
-      description: 'Start auditing immediately without creating an account. Your privacy is our priority.'
+      title: 'Geographic & International SEO',
+      description: 'Comprehensive geo-targeting analysis, hreflang implementation, and local SEO optimization recommendations.'
     },
     {
       icon: <BarChart className="h-8 w-8" />,
-      title: 'Comprehensive Reports',
-      description: 'Technical, on-page, and semantic SEO analysis with actionable recommendations.'
+      title: 'AI Overview Optimization',
+      description: 'Optimize for Google AI Overviews, featured snippets, voice search, and knowledge graph presence.'
+    },
+    {
+      icon: <Shield className="h-8 w-8" />,
+      title: 'Competitive Intelligence',
+      description: 'Market position analysis, competitor comparison, backlink profiles, and keyword opportunity identification.'
     },
     {
       icon: <Clock className="h-8 w-8" />,
-      title: 'Real-time Monitoring',
-      description: 'Track your SEO improvements over time with detailed historical data and trends.'
+      title: 'Advanced Technical Metrics',
+      description: 'PageSpeed Insights, image optimization, crawlability analysis, security assessment, and performance monitoring.'
+    },
+    {
+      icon: <Brain className="h-8 w-8" />,
+      title: 'Content Quality Analysis',
+      description: 'E-A-T assessment, content uniqueness, keyword cannibalization detection, and semantic keyword analysis.'
     }
   ];
 

@@ -1,12 +1,68 @@
 import { supabase } from '../lib/supabase';
 
 // Enhanced SEO analysis types
+interface GeoAnalysis {
+  targetCountries: string[];
+  hreflangImplementation: {
+    present: boolean;
+    errors: string[];
+    recommendations: string[];
+  };
+  localSEO: {
+    score: number;
+    businessListings: boolean;
+    localKeywords: string[];
+    gmbOptimization: string[];
+  };
+}
+
+interface AIOverviewOptimization {
+  aiReadinessScore: number;
+  featuredSnippetPotential: number;
+  voiceSearchOptimization: number;
+  entityOptimization: {
+    score: number;
+    detectedEntities: string[];
+    missingEntities: string[];
+  };
+  knowledgeGraphPresence: boolean;
+}
+
+interface AdvancedTechnicalMetrics {
+  pagespeedInsights: {
+    desktop: { score: number; metrics: any };
+    mobile: { score: number; metrics: any };
+  };
+  securityAnalysis: {
+    httpsImplementation: boolean;
+    securityHeaders: string[];
+    vulnerabilities: string[];
+  };
+  crawlabilityAnalysis: {
+    robotsTxt: { present: boolean; errors: string[] };
+    xmlSitemap: { present: boolean; urls: number; errors: string[] };
+    internalLinking: { score: number; orphanPages: number };
+  };
+}
+
 interface ContentAnalysis {
   topicRelevance: number;
   semanticKeywords: string[];
   contentDepth: number;
   entityRecognition: string[];
   readabilityScore: number;
+  contentQuality: {
+    uniqueness: number;
+    expertiseScore: number;
+    trustworthiness: number;
+    freshness: number;
+  };
+  keywordAnalysis: {
+    primaryKeywords: Array<{ keyword: string; density: number; prominence: number }>;
+    secondaryKeywords: Array<{ keyword: string; density: number }>;
+    keywordCannibalization: string[];
+    missingKeywords: string[];
+  };
 }
 
 interface TechnicalAnalysis {
@@ -14,16 +70,45 @@ interface TechnicalAnalysis {
     lcp: number;
     fid: number;
     cls: number;
+    fcp: number;
+    ttfb: number;
   };
   mobileScore: number;
   schemaMarkup: string[];
   internalLinks: number;
+  imageOptimization: {
+    totalImages: number;
+    optimizedImages: number;
+    missingAltText: number;
+    oversizedImages: number;
+  };
+  technicalIssues: {
+    brokenLinks: number;
+    redirectChains: number;
+    duplicateContent: number;
+    missingMetaTags: number;
+  };
 }
 
 interface CompetitiveAnalysis {
   contentGaps: string[];
   keywordOpportunities: string[];
   competitorStrengths: string[];
+  marketPosition: {
+    estimatedTraffic: number;
+    domainAuthority: number;
+    backlinksProfile: {
+      totalBacklinks: number;
+      referringDomains: number;
+      qualityScore: number;
+    };
+  };
+  competitorComparison: Array<{
+    competitor: string;
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+  }>;
 }
 
 // Enhanced SEO audit service with Supabase integration
@@ -36,6 +121,17 @@ export interface AuditResult {
   contentAnalysis?: ContentAnalysis;
   technicalAnalysis?: TechnicalAnalysis;
   competitiveAnalysis?: CompetitiveAnalysis;
+  geoAnalysis?: GeoAnalysis;
+  aiOverviewOptimization?: AIOverviewOptimization;
+  advancedTechnicalMetrics?: AdvancedTechnicalMetrics;
+  overallRecommendations: Array<{
+    category: string;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+    impact: string;
+    effort: string;
+    recommendation: string;
+    implementationSteps: string[];
+  }>;
   technicalSEO: {
     score: number;
     issues: Array<{
@@ -110,6 +206,10 @@ const createMockAuditResult = async (url: string): Promise<AuditResult> => {
     contentAnalysis: generateContentAnalysis(domain),
     technicalAnalysis: generateTechnicalAnalysis(domain),
     competitiveAnalysis: generateCompetitiveAnalysis(domain),
+    geoAnalysis: generateGeoAnalysis(domain),
+    aiOverviewOptimization: generateAIOverviewOptimization(domain),
+    advancedTechnicalMetrics: generateAdvancedTechnicalMetrics(domain),
+    overallRecommendations: generateOverallRecommendations(domain, score),
     technicalSEO: {
       score: Math.floor(score * 0.8) + Math.floor(Math.random() * 20),
       issues: generateTechnicalIssues(url)
@@ -152,6 +252,91 @@ const calculateRealisticScore = (domain: string): number => {
   return Math.min(95, baseScore + Math.floor(Math.random() * 20));
 };
 
+const generateGeoAnalysis = (domain: string): GeoAnalysis => {
+  const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'ES', 'IT'];
+  const targetCountries = countries.slice(0, Math.floor(Math.random() * 3) + 1);
+  
+  return {
+    targetCountries,
+    hreflangImplementation: {
+      present: Math.random() > 0.6,
+      errors: Math.random() > 0.7 ? [] : ['Missing return links', 'Incorrect language codes'],
+      recommendations: [
+        'Implement hreflang tags for international targeting',
+        'Use proper language and country codes',
+        'Ensure bidirectional hreflang links'
+      ]
+    },
+    localSEO: {
+      score: Math.floor(Math.random() * 40) + 60,
+      businessListings: Math.random() > 0.5,
+      localKeywords: [`${domain.split('.')[0]} near me`, `local ${domain.split('.')[0]}`],
+      gmbOptimization: [
+        'Complete Google My Business profile',
+        'Encourage customer reviews',
+        'Add local business schema markup'
+      ]
+    }
+  };
+};
+
+const generateAIOverviewOptimization = (domain: string): AIOverviewOptimization => {
+  return {
+    aiReadinessScore: Math.floor(Math.random() * 30) + 65,
+    featuredSnippetPotential: Math.floor(Math.random() * 40) + 50,
+    voiceSearchOptimization: Math.floor(Math.random() * 35) + 55,
+    entityOptimization: {
+      score: Math.floor(Math.random() * 25) + 70,
+      detectedEntities: ['Organization', 'Product', 'Service', 'Location'],
+      missingEntities: ['Person', 'Event', 'Review']
+    },
+    knowledgeGraphPresence: Math.random() > 0.7
+  };
+};
+
+const generateAdvancedTechnicalMetrics = (domain: string): AdvancedTechnicalMetrics => {
+  return {
+    pagespeedInsights: {
+      desktop: {
+        score: Math.floor(Math.random() * 30) + 70,
+        metrics: {
+          fcp: Math.random() * 1.5 + 1.0,
+          lcp: Math.random() * 2 + 1.5,
+          cls: Math.random() * 0.15 + 0.05
+        }
+      },
+      mobile: {
+        score: Math.floor(Math.random() * 40) + 50,
+        metrics: {
+          fcp: Math.random() * 2 + 1.5,
+          lcp: Math.random() * 3 + 2.0,
+          cls: Math.random() * 0.2 + 0.1
+        }
+      }
+    },
+    securityAnalysis: {
+      httpsImplementation: Math.random() > 0.2,
+      securityHeaders: ['X-Frame-Options', 'X-Content-Type-Options'],
+      vulnerabilities: Math.random() > 0.8 ? [] : ['Missing security headers', 'Outdated SSL certificate']
+    },
+    crawlabilityAnalysis: {
+      robotsTxt: {
+        present: Math.random() > 0.3,
+        errors: Math.random() > 0.7 ? [] : ['Blocking important pages', 'Syntax errors']
+      },
+      xmlSitemap: {
+        present: Math.random() > 0.4,
+        urls: Math.floor(Math.random() * 500) + 50,
+        errors: Math.random() > 0.6 ? [] : ['404 URLs in sitemap', 'Missing lastmod dates']
+      },
+      internalLinking: {
+        score: Math.floor(Math.random() * 30) + 65,
+        orphanPages: Math.floor(Math.random() * 10)
+      }
+    }
+  };
+};
+
 const generateContentAnalysis = (domain: string): ContentAnalysis => {
   const topics = ['technology', 'business', 'health', 'education', 'entertainment', 'finance'];
   const entities = ['products', 'services', 'locations', 'people', 'organizations'];
@@ -166,7 +351,25 @@ const generateContentAnalysis = (domain: string): ContentAnalysis => {
     ],
     contentDepth: Math.floor(Math.random() * 40) + 60,
     entityRecognition: entities.slice(0, Math.floor(Math.random() * 3) + 2),
-    readabilityScore: Math.floor(Math.random() * 20) + 75
+    readabilityScore: Math.floor(Math.random() * 20) + 75,
+    contentQuality: {
+      uniqueness: Math.floor(Math.random() * 25) + 75,
+      expertiseScore: Math.floor(Math.random() * 30) + 65,
+      trustworthiness: Math.floor(Math.random() * 20) + 80,
+      freshness: Math.floor(Math.random() * 40) + 50
+    },
+    keywordAnalysis: {
+      primaryKeywords: [
+        { keyword: `${domain.split('.')[0]}`, density: Math.random() * 2 + 1, prominence: Math.random() * 50 + 50 },
+        { keyword: `${domain.split('.')[0]} services`, density: Math.random() * 1.5 + 0.5, prominence: Math.random() * 40 + 40 }
+      ],
+      secondaryKeywords: [
+        { keyword: `best ${domain.split('.')[0]}`, density: Math.random() * 1 + 0.3 },
+        { keyword: `${domain.split('.')[0]} solutions`, density: Math.random() * 0.8 + 0.2 }
+      ],
+      keywordCannibalization: Math.random() > 0.7 ? [] : ['Multiple pages targeting same keyword'],
+      missingKeywords: [`${domain.split('.')[0]} reviews`, `${domain.split('.')[0]} pricing`]
+    }
   };
 };
 
@@ -175,11 +378,25 @@ const generateTechnicalAnalysis = (domain: string): TechnicalAnalysis => {
     coreWebVitals: {
       lcp: Math.random() * 2 + 1.5, // 1.5-3.5 seconds
       fid: Math.random() * 80 + 20, // 20-100ms
-      cls: Math.random() * 0.15 + 0.05 // 0.05-0.2
+      cls: Math.random() * 0.15 + 0.05, // 0.05-0.2
+      fcp: Math.random() * 1.5 + 1.0, // 1.0-2.5 seconds
+      ttfb: Math.random() * 500 + 200 // 200-700ms
     },
     mobileScore: Math.floor(Math.random() * 30) + 70,
     schemaMarkup: ['Organization', 'WebSite', 'BreadcrumbList'],
-    internalLinks: Math.floor(Math.random() * 50) + 25
+    internalLinks: Math.floor(Math.random() * 50) + 25,
+    imageOptimization: {
+      totalImages: Math.floor(Math.random() * 50) + 20,
+      optimizedImages: Math.floor(Math.random() * 30) + 15,
+      missingAltText: Math.floor(Math.random() * 10) + 2,
+      oversizedImages: Math.floor(Math.random() * 8) + 1
+    },
+    technicalIssues: {
+      brokenLinks: Math.floor(Math.random() * 5),
+      redirectChains: Math.floor(Math.random() * 3),
+      duplicateContent: Math.floor(Math.random() * 4),
+      missingMetaTags: Math.floor(Math.random() * 8) + 2
+    }
   };
 };
 
@@ -202,7 +419,91 @@ const generateCompetitiveAnalysis = (domain: string): CompetitiveAnalysis => {
       'Comprehensive FAQ sections',
       'Regular content updates',
       'Better mobile optimization'
+    ],
+    marketPosition: {
+      estimatedTraffic: Math.floor(Math.random() * 50000) + 10000,
+      domainAuthority: Math.floor(Math.random() * 40) + 30,
+      backlinksProfile: {
+        totalBacklinks: Math.floor(Math.random() * 5000) + 500,
+        referringDomains: Math.floor(Math.random() * 200) + 50,
+        qualityScore: Math.floor(Math.random() * 30) + 60
+      }
+    },
+    competitorComparison: [
+      {
+        competitor: `competitor1.com`,
+        strengths: ['Better content depth', 'More backlinks'],
+        weaknesses: ['Slower page speed', 'Poor mobile experience'],
+        opportunities: ['Target their weak keywords', 'Improve content quality']
+      }
     ]
+  };
+};
+
+const generateOverallRecommendations = (domain: string, score: number) => {
+  const recommendations = [
+    {
+      category: 'Technical SEO',
+      priority: 'critical' as const,
+      impact: 'High',
+      effort: 'Medium',
+      recommendation: 'Improve Core Web Vitals performance',
+      implementationSteps: [
+        'Optimize images and use WebP format',
+        'Implement lazy loading for below-fold content',
+        'Minimize JavaScript and CSS',
+        'Use a Content Delivery Network (CDN)',
+        'Optimize server response times'
+      ]
+    },
+    {
+      category: 'Content Optimization',
+      priority: 'high' as const,
+      impact: 'High',
+      effort: 'High',
+      recommendation: 'Enhance content depth and semantic relevance',
+      implementationSteps: [
+        'Research and target long-tail keywords',
+        'Add FAQ sections to key pages',
+        'Implement topic clusters and pillar pages',
+        'Improve content freshness with regular updates',
+        'Add expert author bios and credentials'
+      ]
+    },
+    {
+      category: 'AI & Voice Search',
+      priority: 'medium' as const,
+      impact: 'Medium',
+      effort: 'Medium',
+      recommendation: 'Optimize for AI overviews and voice search',
+      implementationSteps: [
+        'Structure content for featured snippets',
+        'Use natural language and conversational keywords',
+        'Implement comprehensive schema markup',
+        'Create content that answers specific questions',
+        'Optimize for local voice searches'
+      ]
+    }
+  ];
+  
+  if (score < 70) {
+    recommendations.unshift({
+      category: 'Critical Issues',
+      priority: 'critical' as const,
+      impact: 'Very High',
+      effort: 'High',
+      recommendation: 'Address fundamental SEO issues immediately',
+      implementationSteps: [
+        'Fix broken links and 404 errors',
+        'Implement proper title tags and meta descriptions',
+        'Ensure mobile responsiveness',
+        'Fix duplicate content issues',
+        'Implement SSL certificate'
+      ]
+    });
+  }
+  
+  return recommendations;
   };
 };
 
