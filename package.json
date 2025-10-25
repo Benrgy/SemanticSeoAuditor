@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "vite build",
     "build:netlify": "vite build && cp netlify.toml dist/ && mkdir -p dist/netlify && cp -r netlify/* dist/netlify/",
-    "build:netlify": "vite build && cp netlify.toml dist/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
