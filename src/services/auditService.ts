@@ -85,11 +85,15 @@ export async function runSEOAudit(
     .from('audits')
     .insert({
       url,
-      email,
       user_id: userId,
-      score: auditData.score,
-      issues: auditData.issues,
-      recommendations: auditData.recommendations,
+      status: 'completed',
+      result_json: {
+        score: auditData.score,
+        issues: auditData.issues,
+        recommendations: auditData.recommendations,
+        metadata: auditData.metadata,
+        email,
+      },
     })
     .select()
     .single();
@@ -100,9 +104,10 @@ export async function runSEOAudit(
 
   return {
     id: data.id,
-    score: data.score,
-    issues: data.issues,
-    recommendations: data.recommendations,
+    score: data.result_json.score,
+    issues: data.result_json.issues,
+    recommendations: data.result_json.recommendations,
+    metadata: data.result_json.metadata,
   };
 }
 
@@ -117,7 +122,18 @@ export async function getAuditsForUser(userId: string) {
     throw new Error(`Failed to fetch audits: ${error.message}`);
   }
 
-  return data;
+  return data.map((audit) => ({
+    id: audit.id,
+    url: audit.url,
+    created_at: audit.created_at,
+    status: audit.status,
+    user_id: audit.user_id,
+    score: audit.result_json?.score || 0,
+    issues: audit.result_json?.issues || [],
+    recommendations: audit.result_json?.recommendations || [],
+    metadata: audit.result_json?.metadata,
+    email: audit.result_json?.email,
+  }));
 }
 
 export async function getAuditById(auditId: string) {
@@ -135,7 +151,18 @@ export async function getAuditById(auditId: string) {
     throw new Error('Audit not found');
   }
 
-  return data;
+  return {
+    id: data.id,
+    url: data.url,
+    created_at: data.created_at,
+    status: data.status,
+    user_id: data.user_id,
+    score: data.result_json?.score || 0,
+    issues: data.result_json?.issues || [],
+    recommendations: data.result_json?.recommendations || [],
+    metadata: data.result_json?.metadata,
+    email: data.result_json?.email,
+  };
 }
 
 export async function trackClickToCall(auditId: string) {
