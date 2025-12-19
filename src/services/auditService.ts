@@ -136,6 +136,23 @@ export async function getAuditById(auditId: string) {
     throw new Error('Audit not found');
   }
 
+  const issues = data.result_json?.issues || [];
+
+  const technicalIssues = issues.filter((issue: AuditIssue) =>
+    ['missing-viewport', 'missing-canonical', 'robots-restriction'].includes(issue.type)
+  );
+
+  const onPageIssues = issues.filter((issue: AuditIssue) =>
+    ['missing-title', 'empty-title', 'short-title', 'long-title',
+     'missing-meta-description', 'short-meta-description', 'long-meta-description',
+     'missing-h1', 'multiple-h1', 'no-h2-headings'].includes(issue.type)
+  );
+
+  const semanticIssues = issues.filter((issue: AuditIssue) =>
+    ['missing-og-tags', 'missing-image-alt', 'few-internal-links',
+     'missing-structured-data', 'thin-content'].includes(issue.type)
+  );
+
   return {
     id: data.id,
     url: data.url,
@@ -143,19 +160,33 @@ export async function getAuditById(auditId: string) {
     status: data.status,
     user_id: data.user_id,
     score: data.result_json?.score || 0,
-    issues: data.result_json?.issues || [],
+    issues: issues,
     recommendations: data.result_json?.recommendations || [],
     metadata: data.result_json?.metadata,
     email: data.result_json?.email,
+    technicalSEO: {
+      issues: technicalIssues
+    },
+    onPageSEO: {
+      issues: onPageIssues
+    },
+    semanticSEO: {
+      issues: semanticIssues
+    },
+    overallRecommendations: []
   };
 }
 
-export async function trackClickToCall(auditId: string) {
+export async function trackClickToCall(auditId: string, userId?: string) {
   const { error } = await supabase
     .from('audit_events')
     .insert({
       audit_id: auditId,
+      user_id: userId,
       event_type: 'click_to_call',
+      metadata: {
+        timestamp: new Date().toISOString()
+      }
     });
 
   if (error) {
