@@ -5,17 +5,6 @@
   publish = "dist"
   functions = "netlify/functions"
 
-# Enhanced edge functions with priority routing
-[[edge_functions]]
-  function = "audit-seo"
-  path = "/audit/*"
-  cache = "manual"
-
-[[edge_functions]]
-  function = "general-seo"
-  path = "/*"
-  cache = "manual"
-
 # SPA redirect rules with enhanced routing
 [[redirects]]
   from = "/audit/:id"
@@ -146,11 +135,6 @@
   node_bundler = "esbuild"
   external_node_modules = ["sharp", "canvas"]
   included_files = ["netlify/functions/**"]
-
-# Enhanced edge function settings
-[edge_functions]
-  external_node_modules = ["@supabase/supabase-js"]
-  import_map = "import_map.json"
 
 # Development settings
 [dev]
