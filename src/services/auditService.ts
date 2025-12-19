@@ -5,6 +5,13 @@ export interface AuditResult {
   score: number;
   issues: AuditIssue[];
   recommendations: string[];
+  metadata?: {
+    url: string;
+    analyzedAt: string;
+    responseTime: number;
+    contentLength: number;
+    statusCode: number;
+  };
 }
 
 export interface AuditIssue {
@@ -15,59 +22,37 @@ export interface AuditIssue {
 }
 
 export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>> {
-  const issues: AuditIssue[] = [];
-  const recommendations: string[] = [];
-
   try {
-    const response = await fetch(url);
-    const html = await response.text();
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    const hasTitle = /<title>.*?<\/title>/i.test(html);
-    if (!hasTitle) {
-      issues.push({
-        type: 'missing-title',
-        severity: 'high',
-        description: 'Page is missing a title tag',
-      });
-      recommendations.push('Add a descriptive title tag to improve SEO');
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase configuration missing');
     }
 
-    const hasMetaDescription = /<meta\s+name=["']description["']/i.test(html);
-    if (!hasMetaDescription) {
-      issues.push({
-        type: 'missing-meta-description',
-        severity: 'high',
-        description: 'Page is missing a meta description',
-      });
-      recommendations.push('Add a meta description to improve search engine visibility');
+    const functionUrl = `${supabaseUrl}/functions/v1/run-seo-audit`;
+
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+      },
+      body: JSON.stringify({ url }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Server returned ${response.status}`);
     }
 
-    const hasH1 = /<h1.*?>.*?<\/h1>/i.test(html);
-    if (!hasH1) {
-      issues.push({
-        type: 'missing-h1',
-        severity: 'medium',
-        description: 'Page is missing an H1 heading',
-      });
-      recommendations.push('Add an H1 heading to establish page hierarchy');
-    }
-
-    const hasViewport = /<meta\s+name=["']viewport["']/i.test(html);
-    if (!hasViewport) {
-      issues.push({
-        type: 'missing-viewport',
-        severity: 'medium',
-        description: 'Page is missing viewport meta tag',
-      });
-      recommendations.push('Add viewport meta tag for mobile responsiveness');
-    }
-
-    const score = Math.max(0, 100 - issues.length * 15);
+    const result = await response.json();
 
     return {
-      score,
-      issues,
-      recommendations,
+      score: result.score,
+      issues: result.issues,
+      recommendations: result.recommendations,
+      metadata: result.metadata,
     };
   } catch (error) {
     throw new Error(`Failed to audit URL: ${error instanceof Error ? error.message : 'Unknown error'}`);
