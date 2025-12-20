@@ -1,4 +1,7 @@
 import { supabase } from '../lib/supabase';
+import { analyzeGeographic, GeographicAnalysis } from './geographicAnalyzer';
+import { analyzeVoiceSearch, VoiceSearchAnalysis } from './voiceSearchAnalyzer';
+import { analyzeCompetitive, CompetitiveAnalysis } from './competitiveAnalyzer';
 
 export interface AuditResult {
   id: string;
@@ -12,6 +15,9 @@ export interface AuditResult {
     contentLength: number;
     statusCode: number;
   };
+  geographic?: GeographicAnalysis;
+  voiceSearch?: VoiceSearchAnalysis;
+  competitive?: CompetitiveAnalysis;
 }
 
 export interface AuditIssue {
@@ -186,12 +192,23 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
     }
 
     const result = await response.json();
+    const html = await fetch(url, { mode: 'cors' }).then(r => r.text()).catch(() => '');
+
+    let geographic, voiceSearch, competitive;
+    if (html) {
+      geographic = analyzeGeographic(html, url);
+      voiceSearch = analyzeVoiceSearch(html, url);
+      competitive = analyzeCompetitive(html, url);
+    }
 
     return {
       score: result.score,
       issues: result.issues,
       recommendations: result.recommendations,
       metadata: result.metadata,
+      geographic,
+      voiceSearch,
+      competitive,
     };
   } catch (edgeFunctionError) {
     console.warn('Edge function unavailable, trying direct fetch:', edgeFunctionError);
@@ -209,7 +226,14 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
       }
 
       const html = await proxyResponse.text();
-      return await analyzeHTML(html, url);
+      const basicAnalysis = await analyzeHTML(html, url);
+
+      return {
+        ...basicAnalysis,
+        geographic: analyzeGeographic(html, url),
+        voiceSearch: analyzeVoiceSearch(html, url),
+        competitive: analyzeCompetitive(html, url),
+      };
     } catch (directFetchError) {
       throw new Error(
         `Unable to analyze website. The site may block cross-origin requests or the edge function may not be deployed. Try deploying the Supabase edge function 'run-seo-audit' for full functionality.`
@@ -332,7 +356,10 @@ export async function getAuditById(auditId: string) {
     semanticSEO: {
       issues: semanticIssues
     },
-    overallRecommendations: []
+    overallRecommendations: [],
+    geographic: data.result_json?.geographic,
+    voiceSearch: data.result_json?.voiceSearch,
+    competitive: data.result_json?.competitive
   };
 }
 

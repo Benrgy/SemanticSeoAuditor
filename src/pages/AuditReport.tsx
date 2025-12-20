@@ -5,6 +5,9 @@ import { getAuditById } from '../services/auditService';
 import { useNotification } from '../contexts/NotificationContext';
 import { trackClickToCall } from '../services/auditService';
 import { useAuth } from '../contexts/AuthContext';
+import { GeographicAnalysisCard } from '../components/GeographicAnalysisCard';
+import { VoiceSearchAnalysisCard } from '../components/VoiceSearchAnalysisCard';
+import { CompetitiveAnalysisCard } from '../components/CompetitiveAnalysisCard';
 
 interface AuditReport {
   id: string;
@@ -462,8 +465,14 @@ const AuditReport: React.FC = () => {
 
             {activeTab === 'advanced' && (
               <div>
-                <h3 className="text-lg font-semibold text-white mb-6">Advanced SEO Metrics</h3>
-                
+                <h3 className="text-lg font-semibold text-white mb-6">Advanced SEO Analysis</h3>
+
+                <div className="space-y-6 mb-8">
+                  {report.geographic && <GeographicAnalysisCard analysis={report.geographic} />}
+                  {report.voiceSearch && <VoiceSearchAnalysisCard analysis={report.voiceSearch} />}
+                  {report.competitive && <CompetitiveAnalysisCard analysis={report.competitive} />}
+                </div>
+
                 {/* Geo Analysis */}
                 {report.geoAnalysis && (
                   <div className="mb-8">
