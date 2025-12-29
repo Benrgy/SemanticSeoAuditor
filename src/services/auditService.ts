@@ -171,12 +171,15 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Supabase configuration missing');
+    throw new Error('Supabase configuration missing. Please check your environment variables.');
   }
 
   const functionUrl = `${supabaseUrl}/functions/v1/run-seo-audit`;
 
   try {
+    console.log(`🔍 Attempting to analyze: ${url}`);
+    console.log(`📡 Using edge function: ${functionUrl}`);
+
     const response = await fetch(functionUrl, {
       method: 'POST',
       headers: {
@@ -188,10 +191,13 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.error('❌ Edge function error:', errorData);
       throw new Error(errorData.error || `Server returned ${response.status}`);
     }
 
     const result = await response.json();
+    console.log('✅ Audit completed via edge function');
+
     const html = await fetch(url, { mode: 'cors' }).then(r => r.text()).catch(() => '');
 
     let geographic, voiceSearch, competitive;
@@ -211,7 +217,7 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
       competitive,
     };
   } catch (edgeFunctionError) {
-    console.warn('Edge function unavailable, trying direct fetch:', edgeFunctionError);
+    console.warn('⚠️  Edge function unavailable, trying direct fetch:', edgeFunctionError);
 
     try {
       const proxyResponse = await fetch(url, {
@@ -226,6 +232,7 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
       }
 
       const html = await proxyResponse.text();
+      console.log('✅ Audit completed via direct fetch (fallback)');
       const basicAnalysis = await analyzeHTML(html, url);
 
       return {
@@ -235,8 +242,13 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
         competitive: analyzeCompetitive(html, url),
       };
     } catch (directFetchError) {
+      console.error('❌ Direct fetch failed:', directFetchError);
       throw new Error(
-        `Unable to analyze website. The site may block cross-origin requests or the edge function may not be deployed. Try deploying the Supabase edge function 'run-seo-audit' for full functionality.`
+        `Unable to analyze website "${url}". This could be due to:\n\n` +
+        `1. The Supabase edge function 'run-seo-audit' is not deployed\n` +
+        `2. The website blocks cross-origin requests (CORS)\n` +
+        `3. The website is not accessible\n\n` +
+        `Please deploy the edge function using: npx supabase functions deploy run-seo-audit`
       );
     }
   }
