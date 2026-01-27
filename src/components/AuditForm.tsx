@@ -3,6 +3,7 @@ import { Search, Mail, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { validationUtils } from '../lib/utils';
+import { logger } from '../utils/logger';
 
 interface AuditFormProps {
   onSubmit: (url: string, email?: string) => void;
@@ -17,33 +18,30 @@ const AuditForm: React.FC<AuditFormProps> = ({ onSubmit, isLoading }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('Form submitted with:', { url: url.trim(), email: email.trim(), showEmailField });
-    
-    // Reset errors
+
+    logger.log('Form submitted with:', { url: url.trim(), email: email.trim(), showEmailField });
+
     setErrors({});
-    
-    // Validate URL
+
     if (!url.trim()) {
       setErrors({ url: 'Please enter a website URL' });
       return;
     }
-    
+
     if (!validationUtils.isValidUrl(url.trim())) {
       setErrors({ url: 'Please enter a valid website URL' });
       return;
     }
-    
+
     if (showEmailField) {
-      // Validate email if provided
       if (email.trim() && !validationUtils.isValidEmail(email.trim())) {
         setErrors({ email: 'Please enter a valid email address' });
         return;
       }
-      console.log('Submitting audit for:', url.trim(), 'with email:', email.trim() || 'none');
+      logger.log('Submitting audit for:', url.trim(), 'with email:', email.trim() || 'none');
       onSubmit(url.trim(), email.trim() || undefined);
     } else {
-      console.log('Showing email field');
+      logger.log('Showing email field');
       setShowEmailField(true);
     }
   };
