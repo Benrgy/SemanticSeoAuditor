@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User } from '../lib/supabase';
+import { logger } from '../utils/logger';
 
 
 interface AuthContextType {
@@ -8,7 +9,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
 
@@ -31,13 +32,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    const initAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setUser(session?.user ?? null);
+      } catch (error) {
+        logger.error('Failed to get session:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Listen for auth changes
+    initAuth();
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -65,7 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      console.warn('Analytics tracking failed:', error);
+      logger.warn('Analytics tracking failed:', error);
     }
   };
 
@@ -86,12 +95,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      console.warn('Analytics tracking failed:', error);
+      logger.warn('Analytics tracking failed:', error);
     }
   };
 
-  const logout = () => {
-    supabase.auth.signOut();
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      logger.error('Logout failed:', error);
+      throw error;
+    }
   };
 
   const resetPassword = async (email: string) => {

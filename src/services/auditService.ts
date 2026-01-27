@@ -2,6 +2,7 @@ import { supabase } from '../lib/supabase';
 import { analyzeGeographic, GeographicAnalysis } from './geographicAnalyzer';
 import { analyzeVoiceSearch, VoiceSearchAnalysis } from './voiceSearchAnalyzer';
 import { analyzeCompetitive, CompetitiveAnalysis } from './competitiveAnalyzer';
+import { logger } from '../utils/logger';
 
 export interface AuditResult {
   id: string;
@@ -177,8 +178,8 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
   const functionUrl = `${supabaseUrl}/functions/v1/run-seo-audit`;
 
   try {
-    console.log(`🔍 Attempting to analyze: ${url}`);
-    console.log(`📡 Using edge function: ${functionUrl}`);
+    logger.log(`🔍 Attempting to analyze: ${url}`);
+    logger.log(`📡 Using edge function: ${functionUrl}`);
 
     const response = await fetch(functionUrl, {
       method: 'POST',
@@ -191,12 +192,12 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('❌ Edge function error:', errorData);
+      logger.error('❌ Edge function error:', errorData);
       throw new Error(errorData.error || `Server returned ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('✅ Audit completed via edge function');
+    logger.log('✅ Audit completed via edge function');
 
     const html = await fetch(url, { mode: 'cors' }).then(r => r.text()).catch(() => '');
 
@@ -217,7 +218,7 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
       competitive,
     };
   } catch (edgeFunctionError) {
-    console.warn('⚠️  Edge function unavailable, trying direct fetch:', edgeFunctionError);
+    logger.warn('⚠️  Edge function unavailable, trying direct fetch:', edgeFunctionError);
 
     try {
       const proxyResponse = await fetch(url, {
@@ -232,7 +233,7 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
       }
 
       const html = await proxyResponse.text();
-      console.log('✅ Audit completed via direct fetch (fallback)');
+      logger.log('✅ Audit completed via direct fetch (fallback)');
       const basicAnalysis = await analyzeHTML(html, url);
 
       return {
@@ -242,7 +243,7 @@ export async function performAudit(url: string): Promise<Omit<AuditResult, 'id'>
         competitive: analyzeCompetitive(html, url),
       };
     } catch (directFetchError) {
-      console.error('❌ Direct fetch failed:', directFetchError);
+      logger.error('❌ Direct fetch failed:', directFetchError);
       throw new Error(
         `Unable to analyze website "${url}". This could be due to:\n\n` +
         `1. The Supabase edge function 'run-seo-audit' is not deployed\n` +
@@ -388,6 +389,6 @@ export async function trackClickToCall(auditId: string, userId?: string) {
     });
 
   if (error) {
-    console.error('Failed to track click to call:', error);
+    logger.error('Failed to track click to call:', error);
   }
 }

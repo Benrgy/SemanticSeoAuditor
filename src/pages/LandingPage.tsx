@@ -10,6 +10,7 @@ import FAQSection from '../components/FAQSection';
 import UserPersonas from '../components/UserPersonas';
 import Footer from '../components/Footer';
 import { runSEOAudit } from '../services/auditService';
+import { logger } from '../utils/logger';
 
 const LandingPage: React.FC = () => {
   const [isAuditing, setIsAuditing] = useState(false);
@@ -19,16 +20,16 @@ const LandingPage: React.FC = () => {
 
   const handleAuditSubmit = async (url: string, email?: string) => {
     setIsAuditing(true);
-    
-    console.log('Starting audit for:', url, 'Email:', email || 'none', 'User:', user?.id || 'anonymous');
-    
+
+    logger.log('Starting audit for:', url, 'Email:', email || 'none', 'User:', user?.id || 'anonymous');
+
     try {
       const auditResult = await runSEOAudit(url, email, user?.id);
-      console.log('Audit completed:', auditResult);
+      logger.log('Audit completed:', auditResult);
       addNotification('success', 'SEO audit completed successfully!');
       navigate(`/audit/${auditResult.id}`);
     } catch (error) {
-      console.error('Audit failed:', error);
+      logger.error('Audit failed:', error);
       addNotification('error', `Failed to run SEO audit: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsAuditing(false);

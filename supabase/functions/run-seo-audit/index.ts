@@ -273,9 +273,41 @@ Deno.serve(async (req: Request) => {
       if (!['http:', 'https:'].includes(targetUrl.protocol)) {
         throw new Error('Invalid protocol');
       }
-    } catch {
+
+      const hostname = targetUrl.hostname.toLowerCase();
+
+      const blockedHosts = [
+        'localhost',
+        '127.0.0.1',
+        '0.0.0.0',
+        '::1',
+        '[::]',
+      ];
+
+      const blockedPatterns = [
+        /^10\./,
+        /^172\.(1[6-9]|2[0-9]|3[01])\./,
+        /^192\.168\./,
+        /^169\.254\./,
+        /^fc00:/,
+        /^fe80:/,
+        /^ff00:/,
+      ];
+
+      if (blockedHosts.includes(hostname) ||
+          blockedPatterns.some(pattern => pattern.test(hostname))) {
+        throw new Error('Private IP addresses are not allowed');
+      }
+
+      if (hostname.endsWith('.local') || hostname.endsWith('.internal')) {
+        throw new Error('Local domains are not allowed');
+      }
+    } catch (error) {
       return new Response(
-        JSON.stringify({ error: "Invalid URL format" }),
+        JSON.stringify({
+          error: "Invalid URL",
+          details: error instanceof Error ? error.message : "Invalid URL format"
+        }),
         {
           status: 400,
           headers: {

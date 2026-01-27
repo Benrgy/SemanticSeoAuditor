@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { GeographicAnalysisCard } from '../components/GeographicAnalysisCard';
 import { VoiceSearchAnalysisCard } from '../components/VoiceSearchAnalysisCard';
 import { CompetitiveAnalysisCard } from '../components/CompetitiveAnalysisCard';
+import { logger } from '../utils/logger';
 
 interface AuditReport {
   id: string;
@@ -29,25 +30,25 @@ const AuditReport: React.FC = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log('AuditReport mounted, auditId:', auditId);
+    logger.log('AuditReport mounted, auditId:', auditId);
     loadReport();
   }, [auditId]);
 
   const loadReport = async () => {
     if (!auditId) {
-      console.error('No auditId provided');
+      logger.error('No auditId provided');
       addNotification('error', 'Invalid audit ID');
       return;
     }
-    
-    console.log('Loading report for audit:', auditId);
+
+    logger.log('Loading report for audit:', auditId);
     try {
       setLoading(true);
       const auditData = await getAuditById(auditId);
-      console.log('Loaded audit data:', auditData);
+      logger.log('Loaded audit data:', auditData);
       setReport(auditData);
     } catch (error) {
-      console.error('Failed to load report:', error);
+      logger.error('Failed to load report:', error);
       addNotification('error', `Failed to load audit report: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);

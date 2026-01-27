@@ -19,45 +19,48 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import NotificationToast from './components/NotificationToast';
 import PageViewTracker from './components/Analytics';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <HelmetProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <Router>
-            <SEOWrapper>
-              <div className="min-h-screen bg-gray-900 text-white">
-                <CrawlerDetector />
-                <Header />
-                <NotificationToast />
-                <PageViewTracker page={window.location.hash || '/'} />
-                <Routes>
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/signup" element={<SignupPage />} />
-                  <Route path="/privacy" element={<PrivacyPage />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/cookies" element={<CookiePage />} />
-                  <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/audit/:auditId" element={<AuditReport />} />
-                  <Route path="/files" element={
-                    <ProtectedRoute>
-                      <FileManagement />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/diagnostics" element={<DiagnosticsPage />} />
-                </Routes>
-              </div>
-            </SEOWrapper>
-          </Router>
-        </NotificationProvider>
-      </AuthProvider>
-    </HelmetProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <Router>
+              <SEOWrapper>
+                <div className="min-h-screen bg-gray-900 text-white">
+                  <CrawlerDetector />
+                  <Header />
+                  <NotificationToast />
+                  <PageViewTracker page={window.location.hash || '/'} />
+                  <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/cookies" element={<CookiePage />} />
+                    <Route path="/dashboard" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/audit/:auditId" element={<AuditReport />} />
+                    <Route path="/files" element={
+                      <ProtectedRoute>
+                        <FileManagement />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/diagnostics" element={<DiagnosticsPage />} />
+                  </Routes>
+                </div>
+              </SEOWrapper>
+            </Router>
+          </NotificationProvider>
+        </AuthProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 
