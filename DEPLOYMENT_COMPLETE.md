@@ -23,7 +23,7 @@ Your application has been built successfully and is ready to deploy!
 Your database migrations are located in `supabase/migrations/`. Apply them in this order:
 
 1. **Option A: Using Supabase Dashboard (Recommended)**
-   - Go to https://supabase.com/dashboard/project/zaisbrmgprltcfhmtrsu/sql/new
+   - Go to https://supabase.com/dashboard/project/zaisbrmgprltcf/sql/new
    - Copy and paste each migration file content in order:
      1. `20250716012829_warm_poetry.sql` - Creates initial tables
      2. `20250717133331_icy_boat.sql` - Updates RLS policies
@@ -44,7 +44,7 @@ Deploy your two edge functions to Supabase:
 #### Using Supabase Dashboard:
 
 1. **Deploy run-seo-audit function:**
-   - Go to https://supabase.com/dashboard/project/zaisbrmgprltcfhmtrsu/functions
+   - Go to https://supabase.com/dashboard/project/zaisbrmgprltcf/functions
    - Click "Create a new function"
    - Name: `run-seo-audit`
    - Copy content from `supabase/functions/run-seo-audit/index.ts`
@@ -71,7 +71,7 @@ npx supabase functions deploy semantic-analysis
 1. Go to https://app.netlify.com/drop
 2. Drag the `dist/` folder
 3. Add environment variables in Site Settings:
-   - `VITE_SUPABASE_URL`: https://zaisbrmgprltcfhmtrsu.supabase.co
+   - `VITE_SUPABASE_URL`: https://zaisbrmgprltcf.supabase.co
    - `VITE_SUPABASE_ANON_KEY`: [your anon key from .env]
 
 #### Option B: Using Netlify CLI
@@ -110,20 +110,20 @@ After deployment, test these features:
 
 After deploying edge functions, they'll be available at:
 
-- **SEO Audit:** `https://zaisbrmgprltcfhmtrsu.supabase.co/functions/v1/run-seo-audit`
-- **Semantic Analysis:** `https://zaisbrmgprltcfhmtrsu.supabase.co/functions/v1/semantic-analysis`
+- **SEO Audit:** `https://zaisbrmgprltcf.supabase.co/functions/v1/run-seo-audit`
+- **Semantic Analysis:** `https://zaisbrmgprltcf.supabase.co/functions/v1/semantic-analysis`
 
 Test them with:
 
 ```bash
 # Test SEO Audit
-curl -X POST 'https://zaisbrmgprltcfhmtrsu.supabase.co/functions/v1/run-seo-audit' \
+curl -X POST 'https://zaisbrmgprltcf.supabase.co/functions/v1/run-seo-audit' \
   -H 'Authorization: Bearer YOUR_ANON_KEY' \
   -H 'Content-Type: application/json' \
   -d '{"url": "https://example.com"}'
 
 # Test Semantic Analysis
-curl -X POST 'https://zaisbrmgprltcfhmtrsu.supabase.co/functions/v1/semantic-analysis' \
+curl -X POST 'https://zaisbrmgprltcf.supabase.co/functions/v1/semantic-analysis' \
   -H 'Authorization: Bearer YOUR_ANON_KEY' \
   -H 'Content-Type: application/json' \
   -d '{"url": "https://example.com", "content": "test content", "keywords": ["seo", "audit"]}'
@@ -149,7 +149,7 @@ All tables have Row Level Security (RLS) enabled for data protection.
 Production environment variables needed:
 
 ```env
-VITE_SUPABASE_URL=https://zaisbrmgprltcfhmtrsu.supabase.co
+VITE_SUPABASE_URL=https://zaisbrmgprltcf.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
@@ -164,7 +164,7 @@ OPENAI_API_KEY=your_openai_key_here
 
 Email/password authentication is configured by default in Supabase:
 
-1. Go to https://supabase.com/dashboard/project/zaisbrmgprltcfhmtrsu/auth/users
+1. Go to https://supabase.com/dashboard/project/zaisbrmgprltcf/auth/users
 2. Check Authentication → Providers → Email is enabled
 3. Email confirmations are disabled by default (users can sign up immediately)
 
@@ -190,7 +190,7 @@ Email/password authentication is configured by default in Supabase:
 ### Database Connection Issues
 - Verify credentials in `.env` file
 - Check Supabase project status in dashboard
-- Test connection with: `curl https://zaisbrmgprltcfhmtrsu.supabase.co/rest/v1/`
+- Test connection with: `curl https://zaisbrmgprltcf.supabase.co/rest/v1/`
 
 ---
 
@@ -227,7 +227,7 @@ Before going live:
 
 - Supabase Docs: https://supabase.com/docs
 - Netlify Docs: https://docs.netlify.com
-- Project Dashboard: https://supabase.com/dashboard/project/zaisbrmgprltcfhmtrsu
+- Project Dashboard: https://supabase.com/dashboard/project/zaisbrmgprltcf
 
 ---
 
