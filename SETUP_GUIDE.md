@@ -1,11 +1,16 @@
 # SEO Audit Tool - Complete Setup Guide
 
+## 🔍 Quick Diagnostics
+
+**NEW:** Visit http://localhost:5173/#/diagnostics after starting the dev server to run automated diagnostics that will tell you exactly what's wrong!
+
 ## Current Status
 
 ✅ **Fixed Issues:**
 - Environment configuration (.env file) has been repaired
 - Better error handling and logging added
 - Connection validation implemented
+- Built-in diagnostics page added
 
 ⚠️ **Required Actions:**
 The following steps need to be completed to make the audit functionality work:

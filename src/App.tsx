@@ -14,6 +14,7 @@ import CookiePage from './pages/CookiePage';
 import Dashboard from './pages/Dashboard';
 import AuditReport from './pages/AuditReport';
 import FileManagement from './pages/FileManagement';
+import DiagnosticsPage from './pages/DiagnosticsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import NotificationToast from './components/NotificationToast';
@@ -49,6 +50,7 @@ function App() {
                       <FileManagement />
                     </ProtectedRoute>
                   } />
+                  <Route path="/diagnostics" element={<DiagnosticsPage />} />
                 </Routes>
               </div>
             </SEOWrapper>
