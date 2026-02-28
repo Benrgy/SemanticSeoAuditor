@@ -15,6 +15,8 @@ import Dashboard from './pages/Dashboard';
 import AuditReport from './pages/AuditReport';
 import FileManagement from './pages/FileManagement';
 import DiagnosticsPage from './pages/DiagnosticsPage';
+import WebhooksPage from './pages/WebhooksPage';
+import APIKeysPage from './pages/APIKeysPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import NotificationToast from './components/NotificationToast';
@@ -50,6 +52,16 @@ function App() {
                     <Route path="/files" element={
                       <ProtectedRoute>
                         <FileManagement />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/webhooks" element={
+                      <ProtectedRoute>
+                        <WebhooksPage />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/api-keys" element={
+                      <ProtectedRoute>
+                        <APIKeysPage />
                       </ProtectedRoute>
                     } />
                     <Route path="/diagnostics" element={<DiagnosticsPage />} />

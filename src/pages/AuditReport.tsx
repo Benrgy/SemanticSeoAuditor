@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Phone, Download, Share, ArrowLeft, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Phone, Download, Share, ArrowLeft, CheckCircle, XCircle, AlertTriangle, FileJson, FileSpreadsheet, FileText } from 'lucide-react';
 import { getAuditById } from '../services/auditService';
 import { useNotification } from '../contexts/NotificationContext';
 import { trackClickToCall } from '../services/auditService';
@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { GeographicAnalysisCard } from '../components/GeographicAnalysisCard';
 import { VoiceSearchAnalysisCard } from '../components/VoiceSearchAnalysisCard';
 import { CompetitiveAnalysisCard } from '../components/CompetitiveAnalysisCard';
+import { exportAudit } from '../services/exportService';
 import { logger } from '../utils/logger';
 
 interface AuditReport {
@@ -56,23 +57,31 @@ const AuditReport: React.FC = () => {
   };
 
   const handleCallExpert = async () => {
-    // Track click-to-call event for affiliate attribution
     if (auditId) {
       await trackClickToCall(auditId, user?.id);
     }
-    
+
     addNotification('info', 'Connecting you with an SEO expert...');
-    
-    // In production, this would integrate with Twilio or similar
+
     if ('navigator' in window && 'clipboard' in navigator) {
       navigator.clipboard.writeText('+1-555-SEO-HELP');
       addNotification('success', 'Expert phone number copied to clipboard: +1-555-SEO-HELP');
     }
-    
-    // Simulate call initiation (in production, would use actual phone API)
+
     setTimeout(() => {
       addNotification('success', 'Call initiated! An SEO expert will contact you shortly.');
     }, 2000);
+  };
+
+  const handleExport = async (format: 'json' | 'csv' | 'pdf') => {
+    if (!report) return;
+
+    try {
+      await exportAudit(report, format);
+      addNotification('success', `Exported audit as ${format.toUpperCase()}`);
+    } catch (error) {
+      addNotification('error', `Failed to export: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const getScoreColor = (score: number) => {
@@ -195,7 +204,7 @@ const AuditReport: React.FC = () => {
               </p>
             </div>
             
-            <div className="mt-4 lg:mt-0 flex items-center space-x-4">
+            <div className="mt-4 lg:mt-0 flex items-center space-x-2">
               <button
                 onClick={handleCallExpert}
                 className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
@@ -203,12 +212,37 @@ const AuditReport: React.FC = () => {
                 <Phone className="h-4 w-4 mr-2" />
                 Call Expert
               </button>
-              
-              <button className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
-                <Download className="h-4 w-4 mr-2" />
-                Download PDF
-              </button>
-              
+
+              <div className="relative group">
+                <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </button>
+                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                  <button
+                    onClick={() => handleExport('json')}
+                    className="flex items-center w-full px-4 py-2 text-left text-white hover:bg-gray-700 rounded-t-lg"
+                  >
+                    <FileJson className="h-4 w-4 mr-2" />
+                    Export as JSON
+                  </button>
+                  <button
+                    onClick={() => handleExport('csv')}
+                    className="flex items-center w-full px-4 py-2 text-left text-white hover:bg-gray-700"
+                  >
+                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                    Export as CSV
+                  </button>
+                  <button
+                    onClick={() => handleExport('pdf')}
+                    className="flex items-center w-full px-4 py-2 text-left text-white hover:bg-gray-700 rounded-b-lg"
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export as PDF
+                  </button>
+                </div>
+              </div>
+
               <button className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
                 <Share className="h-4 w-4 mr-2" />
                 Share

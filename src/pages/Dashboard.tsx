@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Search, Plus, Calendar, ExternalLink, RefreshCw } from 'lucide-react';
+import { Search, Plus, Calendar, ExternalLink, RefreshCw, BarChart3 } from 'lucide-react';
 import { getAuditsForUser } from '../services/auditService';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
 
 interface Audit {
   id: string;
@@ -18,6 +19,7 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending' | 'failed'>('all');
+  const [activeTab, setActiveTab] = useState<'audits' | 'analytics'>('audits');
 
   useEffect(() => {
     loadAudits();
@@ -71,44 +73,80 @@ const Dashboard: React.FC = () => {
           <p className="text-gray-400">Welcome back, {user?.email}</p>
         </div>
 
-        {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search audits by URL..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value as any)}
-              className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {/* Tabs */}
+        <div className="mb-6 border-b border-gray-700">
+          <div className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('audits')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'audits'
+                  ? 'border-blue-500 text-blue-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
+              }`}
             >
-              <option value="all">All Audits</option>
-              <option value="completed">Completed</option>
-              <option value="pending">Pending</option>
-              <option value="failed">Failed</option>
-            </select>
-            
-            <Link
-              to="/"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              <div className="flex items-center">
+                <Search className="h-4 w-4 mr-2" />
+                Audit History
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'analytics'
+                  ? 'border-blue-500 text-blue-500'
+                  : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
+              }`}
             >
-              <Plus className="h-4 w-4 mr-2" />
-              New Audit
-            </Link>
+              <div className="flex items-center">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Analytics
+              </div>
+            </button>
           </div>
         </div>
 
-        {/* Audits Table */}
+        {activeTab === 'analytics' ? (
+          <AnalyticsDashboard />
+        ) : (
+          <>
+            {/* Actions Bar */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search audits by URL..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value as any)}
+                  className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Audits</option>
+                  <option value="completed">Completed</option>
+                  <option value="pending">Pending</option>
+                  <option value="failed">Failed</option>
+                </select>
+
+                <Link
+                  to="/"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Audit
+                </Link>
+              </div>
+            </div>
+
+            {/* Audits Table */}
         <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
           {loading ? (
             <div className="p-8 text-center">
@@ -210,6 +248,8 @@ const Dashboard: React.FC = () => {
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
     </div>
   );
